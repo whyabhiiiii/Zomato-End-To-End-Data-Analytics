@@ -452,7 +452,7 @@ st.sidebar.markdown("""
   <div style='font-size:.68rem;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;'>📊 Dataset Info</div>
   <div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;'>
     <div style='text-align:center;'>
-      <div style='font-size:1.1rem;font-weight:800;color:#E23744;'>567K+</div>
+      <div style='font-size:1.1rem;font-weight:800;color:#E23744;'>2.2M+</div>
       <div style='font-size:.65rem;color:#555;margin-top:2px;'>Total Rows</div>
     </div>
     <div style='text-align:center;'>
@@ -918,7 +918,7 @@ with tab4:
 st.markdown("---")
 st.markdown(
     "<p style='text-align:center;color:#555;font-size:.82rem;'>"
-    "🍕 Zomato End-to-End Data Analytics · 567K+ rows · 6 tables · "
+    "🍕 Zomato End-to-End Data Analytics · 2.2M+ rows · 6 tables · "
     "Streamlit + Plotly Interactive Dashboard</p>",
     unsafe_allow_html=True
 )

@@ -1,7 +1,7 @@
 """
 ============================================================
   Zomato End-to-End Data Analytics — Synthetic Data Generator
-  Generates 6 interconnected CSV files (~585K rows total)
+  Generates 6 interconnected CSV files (~2.2M rows total)
   Realistic patterns: peak hours, RFM behavior, Gold members,
   delivery delays, seasonal trends, sentiment labels
 ============================================================
@@ -104,15 +104,15 @@ print("=" * 60)
 
 
 # ─────────────────────────────────────────────
-# 1. USERS TABLE (50,000 rows)
+# 1. USERS TABLE (200,000 rows)
 # ─────────────────────────────────────────────
-print("📋 Generating users.csv (50,000 rows)...")
+print("📋 Generating users.csv (200,000 rows)...")
 
 city_list = list(CITIES.keys())
 city_weights = [0.20, 0.20, 0.18, 0.12, 0.10, 0.08, 0.07, 0.05]
 
 users = []
-for i in range(1, 50001):
+for i in range(1, 200001):
     city = random.choices(city_list, weights=city_weights)[0]
     age = int(np.random.choice(
         range(18, 65),
@@ -155,12 +155,12 @@ print(f"   ✅ users.csv saved ({len(users_df):,} rows)")
 
 
 # ─────────────────────────────────────────────
-# 2. RESTAURANTS TABLE (5,000 rows)
+# 2. RESTAURANTS TABLE (20,000 rows)
 # ─────────────────────────────────────────────
-print("🏪 Generating restaurants.csv (5,000 rows)...")
+print("🏪 Generating restaurants.csv (20,000 rows)...")
 
 restaurants = []
-for i in range(1, 5001):
+for i in range(1, 20001):
     city = random.choices(city_list, weights=city_weights)[0]
     cuisine = random.choice(CUISINES)
     base_rating = np.random.normal(3.8, 0.7)
@@ -194,9 +194,9 @@ print(f"   ✅ restaurants.csv saved ({len(restaurants_df):,} rows)")
 
 
 # ─────────────────────────────────────────────
-# 3. MENU TABLE (50,000 rows)
+# 3. MENU TABLE (200,000 rows)
 # ─────────────────────────────────────────────
-print("🍽️  Generating menu.csv (50,000 rows)...")
+print("🍽️  Generating menu.csv (200,000 rows)...")
 
 menu = []
 menu_id = 1
@@ -218,9 +218,9 @@ for _, rest in restaurants_df.iterrows():
             "is_bestseller": random.choices([1, 0], weights=[0.15, 0.85])[0],
         })
         menu_id += 1
-        if menu_id > 50001:
+        if menu_id > 200001:
             break
-    if menu_id > 50001:
+    if menu_id > 200001:
         break
 
 menu_df = pd.DataFrame(menu)
@@ -229,9 +229,9 @@ print(f"   ✅ menu.csv saved ({len(menu_df):,} rows)")
 
 
 # ─────────────────────────────────────────────
-# 4. ORDERS TABLE (200,000 rows)
+# 4. ORDERS TABLE (800,000 rows)
 # ─────────────────────────────────────────────
-print("📦 Generating orders.csv (200,000 rows)...")
+print("📦 Generating orders.csv (800,000 rows)...")
 
 # Build RFM profile per user: active, at-risk, churned
 user_ids = users_df["user_id"].tolist()
@@ -245,12 +245,12 @@ active_restaurants = restaurants_df[restaurants_df["is_active"] == 1]["restauran
 
 orders = []
 order_id = 1
-start_date = datetime(2022, 1, 1)
-end_date = datetime(2024, 12, 31)
+start_date = datetime(2023, 1, 1)
+end_date = datetime(2026, 12, 31)
 date_range = (end_date - start_date).days
 
-# Simulate 200,000 orders
-sample_users = random.choices(user_ids, k=200000)
+# Simulate 800,000 orders
+sample_users = random.choices(user_ids, k=800000)
 
 for uid in sample_users:
     profile = user_profiles[uid]
@@ -319,11 +319,11 @@ print(f"   ✅ orders.csv saved ({len(orders_df):,} rows)")
 
 
 # ─────────────────────────────────────────────
-# 5. REVIEWS TABLE (80,000 rows)
+# 5. REVIEWS TABLE (320,000 rows)
 # ─────────────────────────────────────────────
-print("⭐ Generating reviews.csv (80,000 rows)...")
+print("⭐ Generating reviews.csv (320,000 rows)...")
 
-delivered_orders = orders_df[orders_df["order_status"] == "Delivered"].sample(80000, random_state=42).reset_index(drop=True)
+delivered_orders = orders_df[orders_df["order_status"] == "Delivered"].sample(320000, random_state=42).reset_index(drop=True)
 
 reviews = []
 for idx, order in delivered_orders.iterrows():
@@ -356,9 +356,9 @@ print(f"   ✅ reviews.csv saved ({len(reviews_df):,} rows)")
 
 
 # ─────────────────────────────────────────────
-# 6. DELIVERY TABLE (200,000 rows)
+# 6. DELIVERY TABLE (800,000 rows)
 # ─────────────────────────────────────────────
-print("🛵 Generating delivery.csv (200,000 rows)...")
+print("🛵 Generating delivery.csv (800,000 rows)...")
 
 n_partners = 2000
 partner_ids = list(range(1, n_partners + 1))

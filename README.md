@@ -23,13 +23,13 @@ This project replicates the full lifecycle of a data analytics role at a food-te
 
 | Table | Rows | Size | Purpose |
 |---|---|---|---|
-| `users.csv` | 50,000 | 4.2 MB | Demographics, Gold status, city |
-| `restaurants.csv` | 5,000 | 399 KB | Metadata across 8 Indian cities |
-| `menu.csv` | 50,001 | 2.1 MB | Menu items, categories, pricing |
-| `orders.csv` | 200,000 | 13 MB | Core transaction fact table |
-| `reviews.csv` | 80,000 | 7.2 MB | Ratings, sentiment labels |
-| `delivery.csv` | 182,386 | 8.4 MB | Partner performance & delay flags |
-| **Total** | **567,387** | **~35 MB** | |
+| `users.csv` | 200,000 | ~16 MB | Demographics, Gold status, city |
+| `restaurants.csv` | 20,000 | ~1.6 MB | Metadata across 8 Indian cities |
+| `menu.csv` | 200,001 | ~8.4 MB | Menu items, categories, pricing |
+| `orders.csv` | 800,000 | ~52 MB | Core transaction fact table |
+| `reviews.csv` | 320,000 | ~28.8 MB | Ratings, sentiment labels |
+| `delivery.csv` | 728,281 | ~33.6 MB | Partner performance & delay flags |
+| **Total** | **2,268,282** | **~140 MB** | |
 
 ### 🏙️ 8 Indian Cities
 Bengaluru · Mumbai · Delhi NCR · Hyderabad · Chennai · Pune · Kolkata · Ahmedabad
@@ -146,7 +146,7 @@ docker run -p 5000:5000 zomato-analytics
 
 ```
 Zomato-End-To-End-Data-Analytics/
-├── 📂 Data/                    # 6 CSV files (567K rows)
+├── 📂 Data/                    # 6 CSV files (~2.26M rows)
 ├── 📂 generate_data/           # Synthetic data generator
 │   └── generate_zomato_data.py
 ├── 📂 SQL/
