@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Zomato End-to-End Data Analytics — AI-powered insights, ML predictions, and business intelligence for the food delivery ecosystem."/>
+  <title>Zomato Analytics | Data Intelligence Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --red:       #E23744;
+      --red-dark:  #c22d39;
+      --red-glow:  rgba(226,55,68,0.25);
+      --orange:    #FF6B35;
+      --dark:      #0d0d0d;
+      --dark2:     #161616;
+      --dark3:     #1e1e1e;
+      --dark4:     #252525;
+      --border:    rgba(255,255,255,0.07);
+      --text:      #f0f0f0;
+      --muted:     #8a8a8a;
+      --white:     #ffffff;
+      --gold:      #FFD700;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 1rem 2rem;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display:flex; align-items:center; gap:.6rem;
+      font-size:1.4rem; font-weight:900; color:var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display:flex; gap:1.5rem; list-style:none; }
+    .nav-links a {
+      color: var(--muted); text-decoration:none; font-size:.85rem;
+      font-weight:500; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--red); color:#fff; border:none;
+      padding: .5rem 1.2rem; border-radius: 2rem;
+      font-size:.85rem; font-weight:600; cursor:pointer;
+      transition: background .2s, transform .15s;
+      text-decoration:none;
+    }
+    .nav-cta:hover { background: var(--red-dark); transform: scale(1.03); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow:hidden;
+    }
+    .hero-bg {
+      position:absolute; inset:0; z-index:0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(226,55,68,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255,107,53,0.08) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position:absolute; inset:0; z-index:0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 80%);
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:.4rem;
+      background: rgba(226,55,68,0.12); border:1px solid rgba(226,55,68,0.3);
+      color: var(--red); padding:.35rem .9rem; border-radius:2rem;
+      font-size:.78rem; font-weight:600; letter-spacing:.04em;
+      text-transform:uppercase; margin-bottom:1.5rem; position:relative; z-index:1;
+      animation: fadeSlideIn .6s ease both;
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight:900; line-height:1.05;
+      position:relative; z-index:1;
+      animation: fadeSlideIn .7s .1s ease both;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--red) 0%, var(--orange) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      max-width:640px; font-size:1.15rem; color:var(--muted);
+      line-height:1.7; margin: 1.5rem auto 2.5rem;
+      position:relative; z-index:1;
+      animation: fadeSlideIn .7s .2s ease both;
+    }
+    .hero-btns {
+      display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;
+      position:relative; z-index:1;
+      animation: fadeSlideIn .7s .3s ease both;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      color:#fff; border:none; padding:.85rem 2.2rem;
+      border-radius:2rem; font-size:1rem; font-weight:700;
+      cursor:pointer; text-decoration:none;
+      box-shadow: 0 0 30px var(--red-glow);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 45px var(--red-glow); }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border); color:var(--text);
+      padding:.85rem 2rem; border-radius:2rem; font-size:1rem;
+      font-weight:600; cursor:pointer; text-decoration:none;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); }
+
+    /* ── STATS ROW ── */
+    .stats {
+      display:flex; gap:2rem; flex-wrap:wrap; justify-content:center;
+      padding: 2.5rem 2rem 0;
+      position:relative; z-index:1;
+      animation: fadeSlideIn .8s .4s ease both;
+    }
+    .stat-item { text-align:center; }
+    .stat-num { font-size:2rem; font-weight:900; color:var(--white); }
+    .stat-num span { color: var(--red); }
+    .stat-label { font-size:.78rem; color:var(--muted); margin-top:.2rem; letter-spacing:.05em; text-transform:uppercase; }
+
+    /* ── SECTION ── */
+    section { padding: 5rem 2rem; }
+    .section-label {
+      font-size:.78rem; color:var(--red); font-weight:700;
+      letter-spacing:.1em; text-transform:uppercase; margin-bottom:.8rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem); font-weight:800;
+      line-height:1.1; margin-bottom:1rem;
+    }
+    .section-sub { font-size:1.05rem; color:var(--muted); max-width:560px; line-height:1.7; }
+
+    /* ── KPI CARDS ── */
+    .kpi-grid {
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap:1.2rem; max-width:1100px; margin:3rem auto 0;
+    }
+    .kpi-card {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius:1rem; padding:1.6rem 1.8rem;
+      transition: border-color .25s, transform .25s;
+      position:relative; overflow:hidden;
+    }
+    .kpi-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background: linear-gradient(90deg, var(--red), var(--orange));
+      opacity:0; transition: opacity .3s;
+    }
+    .kpi-card:hover { border-color: rgba(226,55,68,0.3); transform: translateY(-3px); }
+    .kpi-card:hover::before { opacity:1; }
+    .kpi-icon { font-size:1.4rem; margin-bottom:.8rem; }
+    .kpi-value {
+      font-size:1.9rem; font-weight:800; color:var(--white);
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi-label { font-size:.8rem; color:var(--muted); margin-top:.3rem; font-weight:500; }
+    .kpi-skeleton { width:120px; height:2rem; background:var(--dark4); border-radius:.4rem; animation: shimmer 1.5s infinite; }
+
+    /* ── ML TOOLS ── */
+    .tools-grid {
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap:1.5rem; max-width:1100px; margin:3rem auto 0;
+    }
+    .tool-card {
+      background: var(--dark3); border:1px solid var(--border);
+      border-radius:1.2rem; padding:2rem;
+      display:flex; flex-direction:column; gap:1rem;
+      transition: all .3s; text-decoration:none; color:inherit;
+    }
+    .tool-card:hover { border-color: rgba(226,55,68,0.4); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .tool-icon {
+      width:52px; height:52px; border-radius:1rem;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.5rem;
+    }
+    .tool-icon.red { background:rgba(226,55,68,0.15); }
+    .tool-icon.orange { background:rgba(255,107,53,0.15); }
+    .tool-icon.gold { background:rgba(255,215,0,0.15); }
+    .tool-card h3 { font-size:1.15rem; font-weight:700; }
+    .tool-card p { font-size:.88rem; color:var(--muted); line-height:1.6; }
+    .tool-tag {
+      display:inline-block; background:rgba(226,55,68,0.12);
+      border:1px solid rgba(226,55,68,0.25); color:var(--red);
+      font-size:.7rem; font-weight:700; padding:.25rem .65rem;
+      border-radius:.5rem; letter-spacing:.03em; width:fit-content;
+    }
+    .tool-arrow { color:var(--muted); font-size:.9rem; margin-top:auto; }
+    .tool-card:hover .tool-arrow { color:var(--red); }
+
+    /* ── DATA OVERVIEW ── */
+    .data-table {
+      max-width:900px; margin:2.5rem auto 0;
+      border:1px solid var(--border); border-radius:1rem; overflow:hidden;
+    }
+    .data-table table { width:100%; border-collapse:collapse; }
+    .data-table th {
+      background:var(--dark4); padding:.9rem 1.2rem;
+      text-align:left; font-size:.78rem; font-weight:700;
+      color:var(--muted); letter-spacing:.07em; text-transform:uppercase;
+      border-bottom:1px solid var(--border);
+    }
+    .data-table td {
+      padding:.85rem 1.2rem; font-size:.88rem;
+      border-bottom:1px solid var(--border);
+    }
+    .data-table tr:last-child td { border-bottom:none; }
+    .data-table tr:hover td { background:rgba(255,255,255,0.02); }
+    .badge {
+      display:inline-block; padding:.2rem .7rem; border-radius:.5rem;
+      font-size:.72rem; font-weight:700;
+    }
+    .badge-green  { background:rgba(76,175,80,0.15);  color:#4CAF50; }
+    .badge-red    { background:rgba(226,55,68,0.15);  color:var(--red); }
+    .badge-orange { background:rgba(255,107,53,0.15); color:var(--orange); }
+    .badge-gold   { background:rgba(255,215,0,0.1);   color:var(--gold); }
+    .badge-blue   { background:rgba(33,150,243,0.15); color:#2196F3; }
+    .badge-purple { background:rgba(156,39,176,0.15); color:#9C27B0; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top:1px solid var(--border);
+      padding:2rem; text-align:center;
+      color:var(--muted); font-size:.82rem;
+    }
+    footer a { color:var(--red); text-decoration:none; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeSlideIn {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .shimmer {
+      background: linear-gradient(90deg, var(--dark4) 25%, #2e2e2e 50%, var(--dark4) 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    /* ── FLOATING ORBS ── */
+    .orb {
+      position:absolute; border-radius:50%; filter:blur(60px); pointer-events:none;
+    }
+    .orb-1 { width:300px; height:300px; top:10%; left:-5%; background:rgba(226,55,68,0.07); }
+    .orb-2 { width:400px; height:400px; bottom:5%; right:-10%; background:rgba(255,107,53,0.06); }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">🍕 <span>Zomato</span> Analytics</a>
+    <ul class="nav-links">
+      <li><a href="#kpis">KPIs</a></li>
+      <li><a href="#tools">ML Tools</a></li>
+      <li><a href="#data">Dataset</a></li>
+      <li><a href="#tech">Tech Stack</a></li>
+    </ul>
+    <a href="#tools" class="nav-cta">Try Predictions</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="hero-badge">
+      <i class="fas fa-chart-bar"></i>
+      End-to-End Data Analytics Project
+    </div>
+
+    <h1>
+      Food Delivery<br/>
+      <span class="grad">Intelligence Platform</span>
+    </h1>
+
+    <p class="hero-sub">
+      A production-grade analytics project built on <strong>567K+ rows</strong> of realistic Zomato data —
+      featuring 40+ SQL queries, RFM segmentation, 3 ML models, and a live prediction interface.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#tools" class="btn-primary">
+        <i class="fas fa-brain"></i> Explore ML Tools
+      </a>
+      <a href="#data" class="btn-ghost">
+        <i class="fas fa-database"></i> View Dataset
+      </a>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-num">567<span>K</span></div>
+        <div class="stat-label">Data Rows</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">6</div>
+        <div class="stat-label">SQL Tables</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">40<span>+</span></div>
+        <div class="stat-label">SQL Queries</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">ML Models</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Indian Cities</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI SECTION -->
+  <section id="kpis" style="background:var(--dark2);">
+    <div style="max-width:1100px; margin:0 auto;">
+      <div class="section-label"><i class="fas fa-tachometer-alt"></i> Live Metrics</div>
+      <h2 class="section-title">Platform KPI Summary</h2>
+      <p class="section-sub">Real numbers computed from our 567K-row synthetic Zomato dataset.</p>
+
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-skeleton shimmer"></div><div class="kpi-label">Total Revenue</div></div>
+        <div class="kpi-card"><div class="kpi-icon">📦</div><div class="kpi-skeleton shimmer"></div><div class="kpi-label">Total Orders</div></div>
+        <div class="kpi-card"><div class="kpi-icon">🧾</div><div class="kpi-skeleton shimmer"></div><div class="kpi-label">Avg Order Value</div></div>
+        <div class="kpi-card"><div class="kpi-icon">👥</div><div class="kpi-skeleton shimmer"></div><div class="kpi-label">Active Users</div></div>
+        <div class="kpi-card"><div class="kpi-icon">⏰</div><div class="kpi-skeleton shimmer"></div><div class="kpi-label">Delay Rate</div></div>
+        <div class="kpi-card"><div class="kpi-icon">❌</div><div class="kpi-skeleton shimmer"></div><div class="kpi-label">Cancellation Rate</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ML TOOLS SECTION -->
+  <section id="tools">
+    <div style="max-width:1100px; margin:0 auto;">
+      <div class="section-label"><i class="fas fa-brain"></i> Machine Learning</div>
+      <h2 class="section-title">3 Prediction Engines</h2>
+      <p class="section-sub">Production-grade ML models trained on 567K+ data points — interact with them in real time.</p>
+
+      <div class="tools-grid">
+        <a href="/churn" class="tool-card">
+          <div class="tool-icon red">🔮</div>
+          <div class="tool-tag">Random Forest · 15 Features</div>
+          <h3>Customer Churn Predictor</h3>
+          <p>Predicts whether a customer is about to churn using RFM segmentation, review sentiment, delivery experience, and demographic signals.</p>
+          <div class="tool-arrow"><i class="fas fa-arrow-right"></i> Try it →</div>
+        </a>
+
+        <a href="/delay" class="tool-card">
+          <div class="tool-icon orange">🚴</div>
+          <div class="tool-tag">Gradient Boosting · 10 Features</div>
+          <h3>Delivery Delay Predictor</h3>
+          <p>Identifies orders at risk of late delivery based on distance, peak hours, city, restaurant type, and order characteristics.</p>
+          <div class="tool-arrow"><i class="fas fa-arrow-right"></i> Try it →</div>
+        </a>
+
+        <a href="/rating" class="tool-card">
+          <div class="tool-icon gold">⭐</div>
+          <div class="tool-tag">Random Forest · 19 Features</div>
+          <h3>Restaurant Rating Predictor</h3>
+          <p>Forecasts a restaurant's expected rating from review sentiment, revenue per order, delivery speed, and location features.</p>
+          <div class="tool-arrow"><i class="fas fa-arrow-right"></i> Try it →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATASET SECTION -->
+  <section id="data" style="background:var(--dark2);">
+    <div style="max-width:1100px; margin:0 auto;">
+      <div class="section-label"><i class="fas fa-database"></i> Data Layer</div>
+      <h2 class="section-title">6-Table Relational Schema</h2>
+      <p class="section-sub">Realistic synthetic data with Indian city patterns, peak-hour behaviors, and RFM-encoded user profiles.</p>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Table</th><th>Rows</th><th>Key Columns</th><th>Purpose</th><th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>users.csv</strong></td>
+              <td>50,000</td>
+              <td>user_id, age, city, is_gold_member</td>
+              <td>Customer demographics & Gold status</td>
+              <td><span class="badge badge-blue">Dimension</span></td>
+            </tr>
+            <tr>
+              <td><strong>restaurants.csv</strong></td>
+              <td>5,000</td>
+              <td>restaurant_id, cuisine, rating, price_range</td>
+              <td>Restaurant metadata across 8 cities</td>
+              <td><span class="badge badge-blue">Dimension</span></td>
+            </tr>
+            <tr>
+              <td><strong>menu.csv</strong></td>
+              <td>50,001</td>
+              <td>menu_id, item_name, price, is_bestseller</td>
+              <td>Menu items per restaurant</td>
+              <td><span class="badge badge-purple">Reference</span></td>
+            </tr>
+            <tr>
+              <td><strong>orders.csv</strong></td>
+              <td>200,000</td>
+              <td>order_id, final_amount, payment_mode, status</td>
+              <td>Core transaction fact table</td>
+              <td><span class="badge badge-red">Fact</span></td>
+            </tr>
+            <tr>
+              <td><strong>reviews.csv</strong></td>
+              <td>80,000</td>
+              <td>review_id, rating, sentiment, review_text</td>
+              <td>Customer feedback & NLP labels</td>
+              <td><span class="badge badge-orange">Event</span></td>
+            </tr>
+            <tr>
+              <td><strong>delivery.csv</strong></td>
+              <td>182,386</td>
+              <td>partner_id, actual_time_min, delay_flag</td>
+              <td>Delivery partner performance</td>
+              <td><span class="badge badge-green">Operational</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section id="tech">
+    <div style="max-width:1100px; margin:0 auto; text-align:center;">
+      <div class="section-label"><i class="fas fa-code"></i> Technology</div>
+      <h2 class="section-title">Full-Stack Analytics Pipeline</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:2.5rem;">
+        <span class="badge badge-red"    style="font-size:.88rem;padding:.45rem 1rem;">🐍 Python 3.13</span>
+        <span class="badge badge-blue"   style="font-size:.88rem;padding:.45rem 1rem;">🐘 PostgreSQL</span>
+        <span class="badge badge-orange" style="font-size:.88rem;padding:.45rem 1rem;">🤖 scikit-learn</span>
+        <span class="badge badge-orange" style="font-size:.88rem;padding:.45rem 1rem;">🐼 Pandas / NumPy</span>
+        <span class="badge badge-orange" style="font-size:.88rem;padding:.45rem 1rem;">📊 Matplotlib / Seaborn</span>
+        <span class="badge badge-gold"   style="font-size:.88rem;padding:.45rem 1rem;">📈 Power BI</span>
+        <span class="badge badge-green"  style="font-size:.88rem;padding:.45rem 1rem;">🌐 Flask</span>
+        <span class="badge badge-blue"   style="font-size:.88rem;padding:.45rem 1rem;">🐳 Docker</span>
+        <span class="badge badge-red"    style="font-size:.88rem;padding:.45rem 1rem;">🔢 SQL (40+ queries)</span>
+        <span class="badge badge-purple" style="font-size:.88rem;padding:.45rem 1rem;">📂 Faker (data gen)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>🍕 <strong>Zomato End-to-End Data Analytics</strong> — Built for job portfolios &amp; data science interviews</p>
+    <p style="margin-top:.5rem;">567K+ rows · 40+ SQL queries · 3 ML models · Production Flask App</p>
+  </footer>
+
+  <script>
+    // Load KPIs from API
+    fetch('/api/kpis')
+      .then(r => r.json())
+      .then(data => {
+        const grid = document.getElementById('kpiGrid');
+        const icons = ['💰','📦','🧾','👥','⏰','❌'];
+        const labels = ['Total Revenue','Total Orders','Avg Order Value','Active Users','Delay Rate','Cancellation Rate'];
+        const keys   = ['total_revenue','total_orders','aov','active_users','delay_rate','cancellation_pct'];
+        grid.innerHTML = keys.map((k,i) => `
+          <div class="kpi-card">
+            <div class="kpi-icon">${icons[i]}</div>
+            <div class="kpi-value">${data[k] || '—'}</div>
+            <div class="kpi-label">${labels[i]}</div>
+          </div>`).join('');
+      })
+      .catch(() => {});
+
+    // Smooth scroll for anchors
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+      });
+    });
+  </script>
+</body>
+</html>
