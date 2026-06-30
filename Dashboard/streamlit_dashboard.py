@@ -534,19 +534,18 @@ def fmt_inr(v):
     return f"₹{v:.0f}"
 
 kpis = [
-    ("💰", fmt_inr(total_rev), "Total Revenue"),
-    ("📦", f"{total_ord:,}",   "Total Orders"),
-    ("🧾", fmt_inr(aov),       "Avg Order Value"),
-    ("👥", f"{active_usr:,}",  "Active Users"),
-    ("⏰", f"{delay_rt:.1f}%", "Delay Rate"),
-    ("❌", f"{cancel_rt:.1f}%","Cancel Rate"),
+    (fmt_inr(total_rev), "Total Revenue"),
+    (f"{total_ord:,}",   "Total Orders"),
+    (fmt_inr(aov),       "Avg Order Value"),
+    (f"{active_usr:,}",  "Active Users"),
+    (f"{delay_rt:.1f}%", "Delay Rate"),
+    (f"{cancel_rt:.1f}%","Cancel Rate"),
 ]
 
 cols = st.columns(6)
-for col, (icon, val, lbl) in zip(cols, kpis):
+for col, (val, lbl) in zip(cols, kpis):
     col.markdown(f"""
     <div class="metric-card">
-      <div style='font-size:1.3rem;margin-bottom:6px;line-height:1;'>{icon}</div>
       <div class="metric-val">{val}</div>
       <div class="metric-lbl">{lbl}</div>
     </div>""", unsafe_allow_html=True)
