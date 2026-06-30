@@ -554,10 +554,10 @@ st.markdown("<div style='margin-top:1.5rem;'></div>", unsafe_allow_html=True)
 
 # ── TABS ─────────────────────────────────────────────────
 tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 Revenue & Orders",
-    "👥 Customer Insights",
-    "🚴 Delivery Analytics",
-    "⭐ Restaurant Performance"
+    "Revenue & Orders",
+    "Customer Insights",
+    "Delivery Analytics",
+    "Restaurant Performance"
 ])
 
 # ════════════════════════════════════════════════════════
