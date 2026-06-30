@@ -1,5 +1,7 @@
 # 🍕 Zomato End-to-End Data Analytics
 
+> **Live Dashboard:** [https://zomatics.streamlit.app](https://zomatics.streamlit.app) 🚀
+
 > **A production-grade portfolio project** — from raw data generation to a live ML prediction web app.  
 > Built to demonstrate end-to-end data engineering, SQL analytics, machine learning, and deployment skills.
 
@@ -77,8 +79,16 @@ Bengaluru · Mumbai · Delhi NCR · Hyderabad · Chennai · Pune · Kolkata · A
 
 ---
 
-## 🌐 Flask Web Application
+## 🌐 Web Applications
 
+### 1. Live Streamlit Analytics Dashboard
+**URL:** [https://zomatics.streamlit.app](https://zomatics.streamlit.app)
+- Interactive KPI tracking (Revenue, Active Users, Delay Rates)
+- Dynamic city and cuisine level filtering
+- RFM segmentation visualizations (Treemaps)
+- Geospatial sentiment analysis
+
+### 2. Flask ML Predictors
 3-predictor web app with Zomato-branded dark UI:
 
 | Page | URL | Description |
@@ -184,9 +194,9 @@ Zomato-End-To-End-Data-Analytics/
 | SQL Analytics | PostgreSQL 16 |
 | EDA | Pandas, Matplotlib, Seaborn |
 | Machine Learning | scikit-learn (Random Forest, Gradient Boosting) |
-| Web Framework | Flask 3.1 |
-| Deployment | Docker + Gunicorn |
-| Dashboard | Power BI (`.pbix`) |
+| Web Framework | Flask 3.1, Streamlit 1.42 |
+| Deployment | Docker, Streamlit Community Cloud |
+| Dashboard | Streamlit, Tableau Public |
 
 ---
 

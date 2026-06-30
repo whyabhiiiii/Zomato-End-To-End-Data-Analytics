@@ -340,25 +340,35 @@ def CL(title_text="", **extra):
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(BASE, "..", "Data")
 
-@st.cache_data(show_spinner="Loading datasets…")
+@st.cache_data(show_spinner="Loading and preparing datasets…")
 def load_data():
     orders   = pd.read_csv(f"{DATA}/orders.csv",   parse_dates=["order_date"])
     users    = pd.read_csv(f"{DATA}/users.csv")
     rests    = pd.read_csv(f"{DATA}/restaurants.csv")
     delivery = pd.read_csv(f"{DATA}/delivery.csv", parse_dates=["order_date"])
     reviews  = pd.read_csv(f"{DATA}/reviews.csv",  parse_dates=["review_date"])
-    return orders, users, rests, delivery, reviews
 
-orders, users, rests, delivery, reviews = load_data()
+    orders_rich = (
+        orders
+        .merge(users[["user_id","city","gender","is_gold_member","age","occupation"]], on="user_id", how="left")
+        .merge(rests[["restaurant_id","name","cuisine","restaurant_type","rating"]], on="restaurant_id", how="left", suffixes=("","_rest"))
+    )
+    orders_rich["order_hour"] = pd.to_datetime(orders_rich["order_time"], format="%H:%M:%S", errors="coerce").dt.hour
+    orders_rich["month"]      = orders_rich["order_date"].dt.to_period("M").astype(str)
 
-# Enrich orders
-orders_rich = (
-    orders
-    .merge(users[["user_id","city","gender","is_gold_member","age","occupation"]], on="user_id", how="left")
-    .merge(rests[["restaurant_id","name","cuisine","restaurant_type","rating"]], on="restaurant_id", how="left", suffixes=("","_rest"))
-)
-orders_rich["order_hour"] = pd.to_datetime(orders_rich["order_time"], format="%H:%M:%S", errors="coerce").dt.hour
-orders_rich["month"]      = orders_rich["order_date"].dt.to_period("M").astype(str)
+    del_full = delivery.merge(
+        orders_rich[["order_id", "city", "cuisine", "order_time", "order_hour", "order_date"]], 
+        on="order_id", how="left", suffixes=("", "_order")
+    )
+    
+    rev_full = reviews.merge(
+        orders_rich[["order_id", "city", "cuisine", "is_gold_member"]],
+        on="order_id", how="left"
+    )
+    
+    return orders_rich, del_full, rev_full
+
+orders_rich, del_full, rev_full = load_data()
 
 # ── SIDEBAR ──────────────────────────────────────────────
 all_cities   = sorted(orders_rich["city"].dropna().unique().tolist())
@@ -480,13 +490,10 @@ elif sel_member == "Regular Members":
 
 delivered = df[df["order_status"] == "Delivered"]
 
-# Filter delivery too
-del_filtered = delivery.copy()
-if len(sel_dates) == 2:
-    del_filtered = del_filtered[
-        (del_filtered["order_date"].dt.date >= sel_dates[0]) &
-        (del_filtered["order_date"].dt.date <= sel_dates[1])
-    ]
+# Cascaded subsets for performance
+valid_order_ids = set(df["order_id"])
+del_filtered = del_full[del_full["order_id"].isin(valid_order_ids)].copy()
+rev_filtered = rev_full[rev_full["order_id"].isin(valid_order_ids)].copy()
 
 # ── HEADER ───────────────────────────────────────────────
 date_range_str = f"{sel_dates[0]} &rarr; {sel_dates[1]}" if len(sel_dates) == 2 else "All dates"
@@ -880,15 +887,8 @@ with tab4:
         st.plotly_chart(fig, use_container_width=True)
 
     # Sentiment by city
-    rev_city = (
-        reviews
-        .merge(rests[["restaurant_id","city"]], on="restaurant_id")
-    )
-    if sel_cities:
-        rev_city = rev_city[rev_city["city"].isin(sel_cities)]
-
-    sent_city = rev_city.groupby(["city","sentiment"]).size().unstack(fill_value=0)
-    sent_pct  = sent_city.div(sent_city.sum(axis=1), axis=0).mul(100).reset_index()
+    sent_city = rev_filtered.groupby(["city", "sentiment"]).size().reset_index(name="count")
+    sent_pct = sent_city.pivot(index="city", columns="sentiment", values="count").fillna(0).reset_index()
 
     fig = go.Figure()
     colors = {"Positive": GREEN, "Neutral": ORANGE, "Negative": RED}
