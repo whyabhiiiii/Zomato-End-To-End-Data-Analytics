@@ -366,9 +366,9 @@ def load_data():
         on="order_id", how="left"
     )
     
-    return orders_rich, del_full, rev_full
+    return orders_rich, del_full, rev_full, rests
 
-orders_rich, del_full, rev_full = load_data()
+orders_rich, del_full, rev_full, rests = load_data()
 
 # ── SIDEBAR ──────────────────────────────────────────────
 all_cities   = sorted(orders_rich["city"].dropna().unique().tolist())
@@ -757,15 +757,9 @@ with tab2:
 with tab3:
     c1, c2 = st.columns(2)
 
-    del_city = (
-        del_filtered
-        .merge(orders[["order_id","restaurant_id"]], on="order_id", how="left")
-        .merge(rests[["restaurant_id","city"]], on="restaurant_id", how="left")
-    )
-
     # Delay rate by city
     with c1:
-        city_delay = del_city.groupby("city")["delay_flag"].mean().mul(100).sort_values(ascending=False).reset_index()
+        city_delay = del_filtered.groupby("city")["delay_flag"].mean().mul(100).sort_values(ascending=False).reset_index()
         city_delay.columns = ["city","delay_rate"]
         city_delay["color"] = city_delay["delay_rate"].apply(
             lambda x: RED if x>30 else ORANGE if x>20 else GREEN
@@ -781,7 +775,7 @@ with tab3:
 
     # Avg delivery time by city
     with c2:
-        city_time = del_city.groupby("city")["actual_time_min"].mean().sort_values(ascending=False).reset_index()
+        city_time = del_filtered.groupby("city")["actual_time_min"].mean().sort_values(ascending=False).reset_index()
         fig = px.bar(city_time, x="actual_time_min", y="city", orientation="h",
                      title="⏱️ Avg Delivery Time by City (min)",
                      color="actual_time_min",
