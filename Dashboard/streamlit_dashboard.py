@@ -365,6 +365,21 @@ def load_data():
         orders_rich[["order_id", "city", "cuisine", "is_gold_member"]],
         on="order_id", how="left"
     )
+    # --- Memory Optimization for Streamlit Cloud 1GB limit ---
+    def optimize_df(df):
+        for col in df.select_dtypes(include=['object']).columns:
+            if df[col].nunique() / len(df) < 0.5:
+                df[col] = df[col].astype("category")
+        for col in df.select_dtypes(include=['int64', 'float64']).columns:
+            df[col] = pd.to_numeric(df[col], downcast='integer')
+            if df[col].dtype == 'float64':
+                df[col] = pd.to_numeric(df[col], downcast='float')
+        return df
+
+    orders_rich = optimize_df(orders_rich)
+    del_full = optimize_df(del_full)
+    rev_full = optimize_df(rev_full)
+    rests = optimize_df(rests)
     
     return orders_rich, del_full, rev_full, rests
 
