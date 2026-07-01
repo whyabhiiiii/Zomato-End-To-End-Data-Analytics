@@ -367,7 +367,7 @@ def load_data():
     )
     # --- Memory Optimization for Streamlit Cloud 1GB limit ---
     def optimize_df(df):
-        for col in df.select_dtypes(include=['object']).columns:
+        for col in df.select_dtypes(include=['object', 'str']).columns:
             if df[col].nunique() / len(df) < 0.5:
                 df[col] = df[col].astype("category")
         for col in df.select_dtypes(include=['int64', 'float64']).columns:
@@ -423,19 +423,19 @@ st.sidebar.markdown("""
 # ── City
 st.sidebar.markdown("<p style='color:#888;font-size:.75rem;font-weight:600;margin:0 0 4px;text-transform:uppercase;letter-spacing:.08em;'>🏙️ City</p>", unsafe_allow_html=True)
 sel_cities = st.sidebar.multiselect(
-    "", all_cities, default=all_cities, label_visibility="collapsed"
+    "City", all_cities, default=all_cities, label_visibility="collapsed"
 )
 
 # ── Cuisine
 st.sidebar.markdown("<p style='color:#888;font-size:.75rem;font-weight:600;margin:8px 0 4px;text-transform:uppercase;letter-spacing:.08em;'>🍽️ Cuisine</p>", unsafe_allow_html=True)
 sel_cuisines = st.sidebar.multiselect(
-    "", all_cuisines, default=all_cuisines, label_visibility="collapsed"
+    "Cuisine", all_cuisines, default=all_cuisines, label_visibility="collapsed"
 )
 
 # ── Date Range
 st.sidebar.markdown("<p style='color:#888;font-size:.75rem;font-weight:600;margin:8px 0 4px;text-transform:uppercase;letter-spacing:.08em;'>📅 Date Range</p>", unsafe_allow_html=True)
 sel_dates = st.sidebar.date_input(
-    "",
+    "Date Range",
     value=(date_min, date_max),
     min_value=date_min, max_value=date_max,
     label_visibility="collapsed"
@@ -444,14 +444,14 @@ sel_dates = st.sidebar.date_input(
 # ── Order Status
 st.sidebar.markdown("<p style='color:#888;font-size:.75rem;font-weight:600;margin:8px 0 4px;text-transform:uppercase;letter-spacing:.08em;'>📦 Order Status</p>", unsafe_allow_html=True)
 sel_status = st.sidebar.selectbox(
-    "", ["All", "Delivered", "Cancelled", "Pending"],
+    "Order Status", ["All", "Delivered", "Cancelled", "Pending"],
     label_visibility="collapsed"
 )
 
 # ── Member Type
 st.sidebar.markdown("<p style='color:#888;font-size:.75rem;font-weight:600;margin:8px 0 4px;text-transform:uppercase;letter-spacing:.08em;'>💛 Member Type</p>", unsafe_allow_html=True)
 sel_member = st.sidebar.radio(
-    "", ["All", "Gold Members", "Regular Members"],
+    "Member Type", ["All", "Gold Members", "Regular Members"],
     label_visibility="collapsed"
 )
 
@@ -591,7 +591,7 @@ with tab1:
         fig.update_layout(**CL(""))
         fig.update_traces(fillcolor=f"rgba(226,55,68,0.15)", line_color=RED)
         fig.update_yaxes(tickprefix="₹")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Revenue by City
     with c2:
@@ -602,7 +602,7 @@ with tab1:
                      color_continuous_scale=[[0,"#2a2a2a"],[1, RED]])
         fig.update_layout(**CL("", coloraxis_showscale=False))
         fig.update_yaxes(tickprefix="₹")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     c3, c4 = st.columns(2)
 
@@ -618,7 +618,7 @@ with tab1:
         ))
         fig.update_layout(**CL("⏰ Order Volume by Hour"))
         fig.update_xaxes(title="Hour of Day", dtick=1)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Revenue by Cuisine
     with c4:
@@ -629,7 +629,7 @@ with tab1:
                      color_continuous_scale=[[0,"#2a2a2a"],[1, ORANGE]])
         fig.update_layout(**CL("", coloraxis_showscale=False))
         fig.update_xaxes(tickprefix="₹")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Payment Mode — in columns to avoid full-width stretch
     pay_dist = df["payment_mode"].value_counts().reset_index()
@@ -642,7 +642,7 @@ with tab1:
                      color_discrete_sequence=[RED, ORANGE, GOLD, GREEN, BLUE])
         fig.update_layout(**CL(""))
         fig.update_traces(textfont_color="white", textposition="inside")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with pc2:
         # Order status breakdown alongside
         status_dist = df["order_status"].value_counts().reset_index()
@@ -653,7 +653,7 @@ with tab1:
                       color_discrete_sequence=[GREEN, RED, ORANGE, BLUE])
         fig2.update_layout(**CL(""))
         fig2.update_traces(textfont_color="white", textposition="inside")
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
 # ════════════════════════════════════════════════════════
 # TAB 2: CUSTOMER INSIGHTS
@@ -675,7 +675,7 @@ with tab2:
                              x=gold_agg["type"], y=gold_agg["avg_order"],
                              marker_color=[RED, GOLD]))
         fig.update_layout(**CL("💛 Gold vs Regular: Avg Order Value"))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Age Group
     with c2:
@@ -689,7 +689,7 @@ with tab2:
                      color_discrete_sequence=[RED, ORANGE, GOLD, GREEN])
         fig.update_layout(**CL(""))
         fig.update_traces(textfont_color="white")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # RFM Segmentation
     st.markdown("""
@@ -740,7 +740,7 @@ with tab2:
                          title="RFM Segment Distribution")
             fig.update_layout(**CL("RFM Segment Distribution"))
             fig.update_traces(textfont_color="white")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with c4:
             seg_rev = rfm.merge(
@@ -753,7 +753,7 @@ with tab2:
                          color_continuous_scale=[[0,"#2a2a2a"],[1, RED]])
             fig.update_layout(**CL("Revenue by RFM Segment", coloraxis_showscale=False))
             fig.update_yaxes(tickprefix="₹")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # Occupation breakdown
     occ_rev = delivered.groupby("occupation")["final_amount"].sum().sort_values(ascending=False).reset_index()
@@ -763,7 +763,7 @@ with tab2:
                  color_continuous_scale=[[0,"#2a2a2a"],[1, ORANGE]])
     fig.update_layout(**CL("", coloraxis_showscale=False))
     fig.update_yaxes(tickprefix="₹")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 # ════════════════════════════════════════════════════════
 # TAB 3: DELIVERY ANALYTICS
@@ -785,7 +785,7 @@ with tab3:
             textposition="outside"
         ))
         fig.update_layout(**CL("🚴 Delay Rate by City (%)"))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Avg delivery time by city
     with c2:
@@ -795,7 +795,7 @@ with tab3:
                      color="actual_time_min",
                      color_continuous_scale=[[0, GREEN],[0.5, ORANGE],[1, RED]])
         fig.update_layout(**CL("", coloraxis_showscale=False))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     c3, c4 = st.columns(2)
 
@@ -815,7 +815,7 @@ with tab3:
             textposition="outside"
         ))
         fig.update_layout(**CL("⚡ Peak vs Off-Peak Delay Rate"))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Distance tiers
     with c4:
@@ -833,7 +833,7 @@ with tab3:
                      text=dist_grp["delay_rate"].round(1))
         fig.update_layout(**CL("", coloraxis_showscale=False))
         fig.update_traces(textposition="outside")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Weekend vs Weekday
     wk_grp = del_filtered.groupby("is_weekend").agg(
@@ -851,7 +851,7 @@ with tab3:
                      color_discrete_map={"Weekday":BLUE,"Weekend":RED})
         fig.update_layout(**CL("", showlegend=False))
         fig.update_yaxes(title="Delay Rate (%)")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with c6:
         fig = px.bar(wk_grp, x="label", y="avg_time",
                      title="📅 Weekend vs Weekday Avg Delivery Time",
@@ -859,7 +859,7 @@ with tab3:
                      color_discrete_map={"Weekday":BLUE,"Weekend":RED})
         fig.update_layout(**CL("", showlegend=False))
         fig.update_yaxes(title="Avg Time (min)")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
 # ════════════════════════════════════════════════════════
 # TAB 4: RESTAURANT PERFORMANCE
@@ -883,7 +883,7 @@ with tab4:
                      hover_data=["city"])
         fig.update_layout(**CL("", coloraxis_showscale=False))
         fig.update_xaxes(tickprefix="₹")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Rating distribution
     with c2:
@@ -892,7 +892,7 @@ with tab4:
                            title="⭐ Restaurant Rating Distribution",
                            color_discrete_sequence=[ORANGE])
         fig.update_layout(**CL(""))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Sentiment by city
     sent_city = rev_filtered.groupby(["city", "sentiment"]).size().reset_index(name="count")
@@ -908,7 +908,7 @@ with tab4:
             ))
     fig.update_layout(**CL("⭐ Review Sentiment by City (%)", barmode="stack"))
     fig.update_yaxes(title="Percentage (%)")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Revenue vs Rating scatter
     rest_data = (
@@ -927,7 +927,7 @@ with tab4:
     fig.update_layout(**CL(""))
     fig.update_yaxes(tickprefix="₹", title="Revenue")
     fig.update_xaxes(title="Restaurant Rating")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 # ── FOOTER ───────────────────────────────────────────────
 st.markdown("---")
